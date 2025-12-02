@@ -58,3 +58,18 @@ Three reusable SQL views that standardize metrics across all downstream analysis
 
 Any analyst can query these views without touching raw tables — this is the foundation of self-service analytics infrastructure.
 
+### 3. ML Audience Intelligence
+- **Cohort analysis**: users segmented by lifecycle stage (New / Growing / Retained / Veteran)
+- **K-Means segmentation** (K=4): behavioral personas — Power Viewers, Engaged Critics, Casual Browsers, At-Risk
+- **Retention scoring**: normalized feature-weighted score (completion rate, active days, titles watched) exposed as reusable pipeline output
+
+### 4. Self-Service BI Dashboard (Streamlit)
+Five interactive tabs:
+- 📊 **Engagement Overview** — DAU trends, cohort retention bar chart
+- 🎯 **Audience Segments** — Donut chart, segment profiles, violin distributions
+- 🎬 **Content Performance** — Genre views, completion rates, device mix
+- ⚡ **Pipeline Engine** — Live pipeline execution demo with worker log
+- 🗄️ **SQL Metric Layer** — Interactive SQL query runner on live data
+
+---
+

@@ -80,3 +80,14 @@ Five interactive tabs:
 git clone https://github.com/sujeeth2003/content-analytics-platform.git
 cd content-analytics-platform
 
+# Install dependencies
+pip install -r requirements.txt
+
+# Launch dashboard
+streamlit run app.py
+```
+
+The app generates synthetic data automatically — no dataset download needed.
+
+---
+

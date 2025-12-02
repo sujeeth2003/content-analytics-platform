@@ -91,3 +91,16 @@ The app generates synthetic data automatically — no dataset download needed.
 
 ---
 
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Data Engineering | Python, Pandas, SQLite (in-memory) |
+| SQL Layer | SQLite views, window functions, multi-table joins |
+| Distributed Execution | Python threading, queue (master/worker) |
+| ML | Scikit-learn (KMeans), feature engineering, retention scoring |
+| Visualization | Plotly, Streamlit |
+| Deployment | Streamlit Cloud (one-click) |
+
+---
+

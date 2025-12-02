@@ -73,3 +73,10 @@ Five interactive tabs:
 
 ---
 
+## Running Locally
+
+```bash
+# Clone
+git clone https://github.com/sujeeth2003/content-analytics-platform.git
+cd content-analytics-platform
+

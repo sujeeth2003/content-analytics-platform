@@ -47,3 +47,14 @@ Raw Events (80k interactions)
 - Results aggregated back through result queue with structured execution logs
 - Demonstrates horizontal scaling concept: more workers → more throughput
 
+### 2. SQL Metric Layer
+Three reusable SQL views that standardize metrics across all downstream analysis:
+
+| View | Purpose |
+|------|---------|
+| `user_metrics` | Per-user behavioral summary (completion, active days, drop rate) |
+| `genre_performance` | Content-level rollup for editorial decisions |
+| `daily_activity` | DAU, total views, avg completion over time |
+
+Any analyst can query these views without touching raw tables — this is the foundation of self-service analytics infrastructure.
+

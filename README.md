@@ -37,3 +37,13 @@ Raw Events (80k interactions)
 └─────────────────────────────────────┘
 ```
 
+---
+
+## Architecture Highlights
+
+### 1. Distributed Pipeline Engine
+- **Master/worker pattern** using Python `threading` + `queue`
+- Master partitions tasks into a thread-safe queue; 4 workers consume independently
+- Results aggregated back through result queue with structured execution logs
+- Demonstrates horizontal scaling concept: more workers → more throughput
+

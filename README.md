@@ -104,3 +104,14 @@ The app generates synthetic data automatically — no dataset download needed.
 
 ---
 
+## Deploying to Streamlit Cloud (Free, 5 minutes)
+
+1. Fork this repo to your GitHub
+2. Go to [share.streamlit.io](https://share.streamlit.io)
+3. Connect your GitHub account
+4. Select this repo → `app.py` → Deploy
+
+Your live URL will be: `https://your-username-content-analytics-platform-app-xxxxx.streamlit.app`
+
+---
+

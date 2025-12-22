@@ -68,3 +68,24 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# ── Data generation (synthetic, realistic) ───────────────────────────────────
+@st.cache_data
+def generate_synthetic_data(n_users=5000, n_content=500, seed=42):
+    rng = np.random.default_rng(seed)
+    genres = ["Drama", "Action", "Comedy", "Thriller", "Sci-Fi", "Romance", "Documentary", "Horror"]
+    content = pd.DataFrame({
+        "content_id": range(n_content),
+        "title": [f"Title_{i}" for i in range(n_content)],
+        "genre": rng.choice(genres, n_content),
+        "release_year": rng.integers(2015, 2025, n_content),
+        "duration_min": rng.integers(20, 180, n_content),
+    })
+
+    join_days_ago = rng.integers(1, 730, n_users)
+    users = pd.DataFrame({
+        "user_id": range(n_users),
+        "join_date": [datetime.now() - timedelta(days=int(d)) for d in join_days_ago],
+        "country": rng.choice(["US","UK","IN","BR","DE","JP","FR","CA"], n_users),
+        "plan": rng.choice(["Standard","Premium","Basic"], n_users, p=[0.5,0.35,0.15]),
+    })
+

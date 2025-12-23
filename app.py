@@ -182,3 +182,19 @@ class PipelineMaster:
             except queue.Empty:
                 break
 
+    def run(self, tasks, tasks_fn):
+        for t in tasks:
+            self.task_queue.put(t)
+        workers = [
+            threading.Thread(target=self._worker, args=(f"W-{i+1}", tasks_fn), daemon=True)
+            for i in range(self.n_workers)
+        ]
+        for w in workers:
+            w.start()
+        for w in workers:
+            w.join()
+        results = []
+        while not self.result_queue.empty():
+            results.append(self.result_queue.get())
+        return results, self.log
+

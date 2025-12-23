@@ -106,3 +106,26 @@ def generate_synthetic_data(n_users=5000, n_content=500, seed=42):
     })
     return users, content, events
 
+# ── SQLite metric layer ───────────────────────────────────────────────────────
+@st.cache_resource
+def build_db(users, content, events):
+    conn = sqlite3.connect(":memory:", check_same_thread=False)
+    users.to_sql("users", conn, index=False, if_exists="replace")
+    content.to_sql("content", conn, index=False, if_exists="replace")
+    events["event_date"] = events["event_date"].astype(str)
+    events.to_sql("events", conn, index=False, if_exists="replace")
+
+    conn.executescript("""
+    CREATE VIEW IF NOT EXISTS user_metrics AS
+    SELECT
+        e.user_id,
+        COUNT(DISTINCT e.content_id)                          AS titles_watched,
+        AVG(e.watch_pct)                                      AS avg_completion,
+        SUM(CASE WHEN e.watch_pct >= 0.85 THEN 1 ELSE 0 END) AS completed_titles,
+        SUM(CASE WHEN e.watch_pct < 0.25  THEN 1 ELSE 0 END) AS dropped_titles,
+        AVG(e.rating)                                         AS avg_rating,
+        COUNT(DISTINCT DATE(e.event_date))                    AS active_days,
+        MAX(e.event_date)                                     AS last_seen
+    FROM events e
+    GROUP BY e.user_id;
+

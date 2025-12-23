@@ -213,3 +213,20 @@ def run_ml_pipeline(conn, events, users):
         labels=["New (0-30d)", "Growing (30-90d)", "Retained (90-365d)", "Veteran (365d+)"]
     )
 
+    # Simple retention label: active in last 14 days
+    user_df["last_seen"] = pd.to_datetime(user_df["last_seen"].replace(0, pd.NaT))
+    user_df["is_retained"] = (
+        (datetime.now() - user_df["last_seen"]).dt.days < 14
+    ).astype(int)
+
+    # Retention score (logistic-style from features)
+    feats = ["avg_completion","completed_titles","active_days","titles_watched"]
+    for f in feats:
+        user_df[f] = pd.to_numeric(user_df[f], errors="coerce").fillna(0)
+    weights = np.array([0.35, 0.25, 0.25, 0.15])
+    raw = user_df[feats].values
+    mins = raw.min(axis=0)
+    maxs = raw.max(axis=0) + 1e-9
+    normed = (raw - mins) / (maxs - mins)
+    user_df["retention_score"] = np.clip((normed * weights).sum(axis=1), 0, 1)
+

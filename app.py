@@ -129,3 +129,27 @@ def build_db(users, content, events):
     FROM events e
     GROUP BY e.user_id;
 
+    CREATE VIEW IF NOT EXISTS genre_performance AS
+    SELECT
+        c.genre,
+        COUNT(*)                    AS total_views,
+        AVG(e.watch_pct)            AS avg_completion,
+        AVG(e.rating)               AS avg_rating,
+        COUNT(DISTINCT e.user_id)   AS unique_viewers
+    FROM events e
+    JOIN content c ON e.content_id = c.content_id
+    GROUP BY c.genre
+    ORDER BY total_views DESC;
+
+    CREATE VIEW IF NOT EXISTS daily_activity AS
+    SELECT
+        DATE(event_date)            AS day,
+        COUNT(*)                    AS total_views,
+        COUNT(DISTINCT user_id)     AS dau,
+        AVG(watch_pct)              AS avg_completion
+    FROM events
+    GROUP BY DATE(event_date)
+    ORDER BY day;
+    """)
+    return conn
+

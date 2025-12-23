@@ -198,3 +198,18 @@ class PipelineMaster:
             results.append(self.result_queue.get())
         return results, self.log
 
+def run_ml_pipeline(conn, events, users):
+    """Full ML pipeline: feature eng → cohort → cluster → retention score"""
+    metrics_df = pd.read_sql("SELECT * FROM user_metrics", conn)
+    user_df = users.merge(metrics_df, on="user_id", how="left").fillna(0)
+
+    # Cohort assignment
+    user_df["days_since_join"] = (
+        datetime.now() - pd.to_datetime(user_df["join_date"])
+    ).dt.days
+    user_df["cohort"] = pd.cut(
+        user_df["days_since_join"],
+        bins=[0, 30, 90, 365, 9999],
+        labels=["New (0-30d)", "Growing (30-90d)", "Retained (90-365d)", "Veteran (365d+)"]
+    )
+

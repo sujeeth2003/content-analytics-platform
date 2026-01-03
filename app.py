@@ -282,3 +282,25 @@ retained = int(user_df["is_retained"].sum())
 avg_completion = float(user_df["avg_completion"].mean())
 avg_score = float(user_df["retention_score"].mean())
 
+c1, c2, c3, c4 = st.columns(4)
+with c1:
+    st.markdown(f"""<div class="metric-card">
+        <div class="metric-value">{total_users:,}</div>
+        <div class="metric-label">Total Members</div>
+    </div>""", unsafe_allow_html=True)
+with c2:
+    st.markdown(f"""<div class="metric-card">
+        <div class="metric-value">{retained:,}</div>
+        <div class="metric-label">Retained (14d)</div>
+    </div>""", unsafe_allow_html=True)
+with c3:
+    st.markdown(f"""<div class="metric-card">
+        <div class="metric-value">{avg_completion:.0%}</div>
+        <div class="metric-label">Avg Completion Rate</div>
+    </div>""", unsafe_allow_html=True)
+with c4:
+    st.markdown(f"""<div class="metric-card">
+        <div class="metric-value">{avg_score:.2f}</div>
+        <div class="metric-label">Avg Retention Score</div>
+    </div>""", unsafe_allow_html=True)
+

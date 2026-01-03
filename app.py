@@ -394,3 +394,19 @@ with tab2:
         fig4.update_yaxes(gridcolor="#333")
         st.plotly_chart(fig4, use_container_width=True)
 
+    st.markdown("### Retention Score Distribution by Segment")
+    fig5 = px.violin(user_df, x="segment", y="retention_score",
+                     color="segment", color_discrete_map=colors,
+                     box=True, points=False)
+    fig5.update_layout(height=320, paper_bgcolor="#141414", plot_bgcolor="#1a1a1a",
+                       font=dict(color="#e5e5e5"), showlegend=False,
+                       margin=dict(l=0,r=0,t=10,b=0))
+    fig5.update_xaxes(gridcolor="#333")
+    fig5.update_yaxes(gridcolor="#333")
+    st.plotly_chart(fig5, use_container_width=True)
+
+# ─────────────────────────── TAB 3: Content ──────────────────────────────────
+with tab3:
+    st.markdown("### Genre Performance")
+    genre_df = pd.read_sql("SELECT * FROM genre_performance", conn)
+

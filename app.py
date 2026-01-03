@@ -322,3 +322,18 @@ with tab1:
     daily["day"] = pd.to_datetime(daily["day"])
     daily = daily.tail(60)
 
+    fig = make_subplots(rows=2, cols=1, shared_xaxes=True,
+                        subplot_titles=("Daily Active Users (DAU)", "Avg Content Completion Rate"),
+                        vertical_spacing=0.12)
+    fig.add_trace(go.Scatter(x=daily["day"], y=daily["dau"],
+                             fill="tozeroy", line=dict(color="#e50914", width=2),
+                             fillcolor="rgba(229,9,20,0.15)", name="DAU"), row=1, col=1)
+    fig.add_trace(go.Scatter(x=daily["day"], y=daily["avg_completion"],
+                             line=dict(color="#46d369", width=2), name="Completion"), row=2, col=1)
+    fig.update_layout(height=400, paper_bgcolor="#141414", plot_bgcolor="#1a1a1a",
+                      font=dict(color="#e5e5e5"), showlegend=False,
+                      margin=dict(l=0, r=0, t=40, b=0))
+    fig.update_xaxes(gridcolor="#333", zeroline=False)
+    fig.update_yaxes(gridcolor="#333", zeroline=False)
+    st.plotly_chart(fig, use_container_width=True)
+

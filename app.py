@@ -432,3 +432,22 @@ with tab3:
                        font=dict(color="#e5e5e5"), margin=dict(l=0,r=0,t=10,b=0))
     st.plotly_chart(fig7, use_container_width=True)
 
+# ─────────────────────────── TAB 4: Pipeline ─────────────────────────────────
+with tab4:
+    st.markdown("### ⚡ Distributed Pipeline Engine")
+    st.markdown("""
+The platform uses a **master/worker architecture** to process analytics tasks in parallel.
+The master distributes tasks across worker threads; each worker processes independently and reports results back.
+This pattern scales horizontally — add more workers to handle larger data volumes.
+    """)
+
+    if st.button("▶ Run Pipeline (Live Demo)", type="primary"):
+        tasks = [
+            {"name": "ingest::events_table",    "partition": "all",   "rows": len(events)},
+            {"name": "transform::user_metrics", "partition": "users", "rows": len(users)},
+            {"name": "transform::genre_rollup", "partition": "content","rows": len(content)},
+            {"name": "score::retention_model",  "partition": "ml",    "rows": len(user_df)},
+            {"name": "export::dashboard_views", "partition": "bi",    "rows": 3},
+            {"name": "validate::schema_check",  "partition": "qa",    "rows": 0},
+        ]
+

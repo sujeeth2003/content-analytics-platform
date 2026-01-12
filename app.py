@@ -410,3 +410,25 @@ with tab3:
     st.markdown("### Genre Performance")
     genre_df = pd.read_sql("SELECT * FROM genre_performance", conn)
 
+    fig6 = make_subplots(rows=1, cols=2,
+                         subplot_titles=("Views by Genre", "Avg Completion by Genre"))
+    fig6.add_trace(go.Bar(x=genre_df["genre"], y=genre_df["total_views"],
+                          marker_color="#e50914", name="Views"), row=1, col=1)
+    fig6.add_trace(go.Bar(x=genre_df["genre"], y=genre_df["avg_completion"],
+                          marker_color="#46d369", name="Completion"), row=1, col=2)
+    fig6.update_layout(height=320, paper_bgcolor="#141414", plot_bgcolor="#1a1a1a",
+                       font=dict(color="#e5e5e5"), showlegend=False,
+                       margin=dict(l=0,r=0,t=40,b=0))
+    fig6.update_xaxes(gridcolor="#333", tickangle=30)
+    fig6.update_yaxes(gridcolor="#333")
+    st.plotly_chart(fig6, use_container_width=True)
+
+    st.markdown("### Device Mix")
+    device_df = events.groupby("device").size().reset_index(name="views")
+    fig7 = px.pie(device_df, names="device", values="views",
+                  color_discrete_sequence=["#e50914","#f5c518","#46d369","#1f8ef1"],
+                  hole=0.4)
+    fig7.update_layout(height=280, paper_bgcolor="#141414",
+                       font=dict(color="#e5e5e5"), margin=dict(l=0,r=0,t=10,b=0))
+    st.plotly_chart(fig7, use_container_width=True)
+

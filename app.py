@@ -451,3 +451,17 @@ This pattern scales horizontally — add more workers to handle larger data volu
             {"name": "validate::schema_check",  "partition": "qa",    "rows": 0},
         ]
 
+        def process_task(task):
+            time.sleep(np.random.uniform(0.1, 0.5))
+            return {"task": task["name"], "rows_processed": task["rows"], "status": "ok"}
+
+        progress = st.progress(0, text="Initializing master...")
+        log_box = st.empty()
+
+        master = PipelineMaster(n_workers=4)
+        results, logs = master.run(tasks, process_task)
+
+        for i, log in enumerate(logs):
+            progress.progress((i+1)/len(logs), text=f"Processing: {log['task']}")
+            time.sleep(0.05)
+

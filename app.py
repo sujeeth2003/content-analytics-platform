@@ -504,3 +504,30 @@ This pattern scales horizontally — add more workers to handle larger data volu
                     └─────────────────┘
     """, language="text")
 
+# ─────────────────────────── TAB 5: SQL Layer ────────────────────────────────
+with tab5:
+    st.markdown("### 🗄️ SQL Metric Layer")
+    st.markdown("""
+All metrics are computed via **SQL views** — reusable, version-controlled definitions
+that any analyst can query without touching raw tables. This is the foundation of
+scalable self-service analytics infrastructure.
+    """)
+
+    queries = {
+        "User Metrics View": "SELECT * FROM user_metrics LIMIT 10",
+        "Genre Performance": "SELECT * FROM genre_performance",
+        "Daily Activity (last 14 days)": """
+            SELECT * FROM daily_activity
+            WHERE day >= DATE('now', '-14 days')
+            ORDER BY day DESC
+        """,
+        "Top Retained Users": """
+            SELECT u.user_id, u.plan, u.country,
+                   m.avg_completion, m.active_days, m.titles_watched
+            FROM user_metrics m
+            JOIN users u ON m.user_id = u.user_id
+            ORDER BY m.active_days DESC
+            LIMIT 10
+        """,
+    }
+

@@ -465,3 +465,18 @@ This pattern scales horizontally — add more workers to handle larger data volu
             progress.progress((i+1)/len(logs), text=f"Processing: {log['task']}")
             time.sleep(0.05)
 
+        progress.progress(1.0, text="✅ Pipeline complete")
+
+        st.markdown("#### Worker Execution Log")
+        log_df = pd.DataFrame(logs)[["worker","task","status","elapsed_s"]]
+        st.dataframe(log_df, use_container_width=True, hide_index=True)
+
+        total_rows = sum(r["rows_processed"] for r in results)
+        workers_used = len(set(l["worker"] for l in logs))
+        total_time = sum(l["elapsed_s"] for l in logs)
+
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Tasks Completed", len(results))
+        c2.metric("Workers Used", workers_used)
+        c3.metric("Total Wall Time (parallel)", f"{max(l['elapsed_s'] for l in logs):.2f}s")
+

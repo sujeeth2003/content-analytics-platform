@@ -480,3 +480,27 @@ This pattern scales horizontally — add more workers to handle larger data volu
         c2.metric("Workers Used", workers_used)
         c3.metric("Total Wall Time (parallel)", f"{max(l['elapsed_s'] for l in logs):.2f}s")
 
+    st.markdown("#### Architecture Diagram")
+    st.code("""
+  ┌──────────────────────────────────────────────────┐
+  │                  MASTER NODE                     │
+  │   - Receives pipeline DAG                        │
+  │   - Partitions tasks into queue                  │
+  │   - Monitors worker health & collects results    │
+  └────────────┬─────────────────────────────────────┘
+               │  task_queue (thread-safe)
+       ┌───────┴────────┐
+       ▼                ▼
+  ┌─────────┐      ┌─────────┐      ┌─────────┐      ┌─────────┐
+  │Worker-1 │      │Worker-2 │      │Worker-3 │      │Worker-4 │
+  │ingest   │      │transform│      │score    │      │validate │
+  └────┬────┘      └────┬────┘      └────┬────┘      └────┬────┘
+       └────────────────┴────────────────┴────────────────┘
+                              │  result_queue
+                              ▼
+                    ┌─────────────────┐
+                    │  SQL Metric DB  │
+                    │  (SQLite views) │
+                    └─────────────────┘
+    """, language="text")
+

@@ -555,3 +555,14 @@ SELECT
 FROM events e
 GROUP BY e.user_id;
 
+-- genre_performance: content-level rollup for editorial decisions
+CREATE VIEW genre_performance AS
+SELECT c.genre,
+       COUNT(*)                  AS total_views,
+       AVG(e.watch_pct)          AS avg_completion,
+       AVG(e.rating)             AS avg_rating,
+       COUNT(DISTINCT e.user_id) AS unique_viewers
+FROM events e
+JOIN content c ON e.content_id = c.content_id
+GROUP BY c.genre;
+    """, language="sql")

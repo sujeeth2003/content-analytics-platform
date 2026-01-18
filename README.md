@@ -115,3 +115,20 @@ Your live URL will be: `https://your-username-content-analytics-platform-app-xxx
 
 ---
 
+## Key Design Decisions
+
+**Why SQL views instead of computed DataFrames?**
+Views are version-controlled, reusable definitions. Any new analysis starts from the same metric definitions — no inconsistency between teams. This mirrors how production analytics teams standardize their metric layer.
+
+**Why master/worker over simple `map()`?**
+The pattern demonstrates explicit task distribution, worker health monitoring, and result aggregation — the conceptual foundation of distributed systems like Spark executors or Airflow workers. It's the right mental model even when threads are the implementation.
+
+**Why synthetic data?**
+The pipeline architecture is what matters — not the specific dataset. Synthetic data lets reviewers run the demo instantly without credential setup, and the schema mirrors real streaming platform event logs.
+
+---
+
+## Author
+
+**Sujeeth Sukumar** — M.S. Data Science, University of Maryland  
+[Portfolio](https://sujeeth2003.github.io/Portfolio/) · [LinkedIn](https://www.linkedin.com/in/sujeeth73/) · [GitHub](https://github.com/sujeeth2003)

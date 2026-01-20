@@ -89,3 +89,20 @@ def generate_synthetic_data(n_users=5000, n_content=500, seed=42):
         "plan": rng.choice(["Standard","Premium","Basic"], n_users, p=[0.5,0.35,0.15]),
     })
 
+    n_events = 80000
+    user_ids = rng.integers(0, n_users, n_events)
+    content_ids = rng.integers(0, n_content, n_events)
+    watch_pct = np.clip(rng.beta(2, 1.5, n_events), 0.01, 1.0)
+    days_ago = rng.integers(0, 90, n_events)
+
+    events = pd.DataFrame({
+        "user_id": user_ids,
+        "content_id": content_ids,
+        "watch_pct": watch_pct,
+        "rating": np.where(rng.random(n_events) < 0.4,
+                           rng.integers(1, 6, n_events).astype(float), np.nan),
+        "event_date": [datetime.now() - timedelta(days=int(d)) for d in days_ago],
+        "device": rng.choice(["TV","Mobile","Desktop","Tablet"], n_events, p=[0.45,0.3,0.18,0.07]),
+    })
+    return users, content, events
+

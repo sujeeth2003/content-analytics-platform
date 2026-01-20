@@ -153,3 +153,32 @@ def build_db(users, content, events):
     """)
     return conn
 
+# ── Distributed pipeline (master/worker with threads + queue) ─────────────────
+class PipelineMaster:
+    def __init__(self, n_workers=4):
+        self.n_workers = n_workers
+        self.task_queue = queue.Queue()
+        self.result_queue = queue.Queue()
+        self.log = []
+        self.lock = threading.Lock()
+
+    def _worker(self, worker_id, tasks_fn):
+        while True:
+            try:
+                task = self.task_queue.get(timeout=0.5)
+                if task is None:
+                    break
+                t0 = time.time()
+                result = tasks_fn(task)
+                elapsed = round(time.time() - t0, 3)
+                with self.lock:
+                    self.log.append({
+                        "worker": worker_id, "task": task["name"],
+                        "status": "✅ done", "elapsed_s": elapsed,
+                        "output": result
+                    })
+                self.result_queue.put(result)
+                self.task_queue.task_done()
+            except queue.Empty:
+                break
+

@@ -52,3 +52,19 @@ st.markdown("""
         font-size: 0.85rem;
     }
     .pipeline-step.done { border-left-color: #46d369; }
+    .pipeline-step.running { border-left-color: #f5c518; }
+    .worker-box {
+        background: #1a1a2e;
+        border: 1px solid #444;
+        border-radius: 6px;
+        padding: 10px;
+        margin: 4px;
+        font-family: monospace;
+        font-size: 0.78rem;
+    }
+    h1, h2, h3 { color: #e5e5e5 !important; }
+    .stTabs [data-baseweb="tab"] { color: #999; }
+    .stTabs [aria-selected="true"] { color: #e50914 !important; border-bottom-color: #e50914 !important; }
+</style>
+""", unsafe_allow_html=True)
+

@@ -265,3 +265,20 @@ with st.sidebar:
     st.markdown("**[GitHub Repo](https://github.com/sujeeth2003)**")
     st.markdown("**[Portfolio](https://sujeeth2003.github.io/Portfolio/)**")
 
+# ── Load data ─────────────────────────────────────────────────────────────────
+with st.spinner("Loading data..."):
+    users, content, events = generate_synthetic_data(n_users=n_users)
+    conn = build_db(users, content, events)
+    user_df = run_ml_pipeline(conn, events, users)
+
+# ── Header ────────────────────────────────────────────────────────────────────
+st.markdown("# 🎬 Content Analytics Platform")
+st.markdown("*Scalable analytics infrastructure for content engagement, retention, and audience intelligence*")
+st.divider()
+
+# ── Top KPI row ───────────────────────────────────────────────────────────────
+total_users = len(user_df)
+retained = int(user_df["is_retained"].sum())
+avg_completion = float(user_df["avg_completion"].mean())
+avg_score = float(user_df["retention_score"].mean())
+

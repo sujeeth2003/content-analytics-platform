@@ -304,3 +304,21 @@ with c4:
         <div class="metric-label">Avg Retention Score</div>
     </div>""", unsafe_allow_html=True)
 
+st.markdown("<br>", unsafe_allow_html=True)
+
+# ── Tabs ──────────────────────────────────────────────────────────────────────
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    "📊 Engagement Overview",
+    "🎯 Audience Segments",
+    "🎬 Content Performance",
+    "⚡ Pipeline Engine",
+    "🗄️ SQL Metric Layer",
+])
+
+# ─────────────────────────── TAB 1: Engagement ───────────────────────────────
+with tab1:
+    st.markdown("### Daily Active Users & Watch Trends")
+    daily = pd.read_sql("SELECT * FROM daily_activity ORDER BY day", conn)
+    daily["day"] = pd.to_datetime(daily["day"])
+    daily = daily.tail(60)
+

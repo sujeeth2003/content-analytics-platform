@@ -230,3 +230,17 @@ def run_ml_pipeline(conn, events, users):
     normed = (raw - mins) / (maxs - mins)
     user_df["retention_score"] = np.clip((normed * weights).sum(axis=1), 0, 1)
 
+    # K-Means segmentation (manual, no sklearn needed for demo)
+    from sklearn.cluster import KMeans
+    from sklearn.preprocessing import StandardScaler
+    seg_feats = user_df[feats].values
+    scaler = StandardScaler()
+    seg_scaled = scaler.fit_transform(seg_feats)
+    km = KMeans(n_clusters=4, random_state=42, n_init=10)
+    user_df["segment"] = km.fit_predict(seg_scaled)
+    seg_names = {0: "Power Viewers", 1: "Casual Browsers", 2: "Engaged Critics", 3: "At-Risk"}
+    # remap by avg retention score per cluster
+    cluster_score = user_df.groupby("segment")["retention_score"].mean().sort_values(ascending=False)
+    remap = {old: list(seg_names.values())[i] for i, old in enumerate(cluster_score.index)}
+    user_df["segment"] = user_df["segment"].map(remap)
+

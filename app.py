@@ -244,3 +244,24 @@ def run_ml_pipeline(conn, events, users):
     remap = {old: list(seg_names.values())[i] for i, old in enumerate(cluster_score.index)}
     user_df["segment"] = user_df["segment"].map(remap)
 
+    return user_df
+
+# ── Sidebar ───────────────────────────────────────────────────────────────────
+with st.sidebar:
+    st.markdown("## 🎬 Content Analytics")
+    st.markdown("*Netflix-style analytics platform*")
+    st.divider()
+    st.markdown("**Architecture**")
+    st.markdown("""
+- 🗄️ SQL metric layer (SQLite views)
+- ⚡ Distributed pipeline (4 workers)
+- 🤖 ML retention scoring
+- 📊 Self-service BI dashboard
+    """)
+    st.divider()
+    n_users = st.slider("Simulated Users", 1000, 10000, 5000, 500)
+    st.caption("Adjust to simulate scale")
+    st.divider()
+    st.markdown("**[GitHub Repo](https://github.com/sujeeth2003)**")
+    st.markdown("**[Portfolio](https://sujeeth2003.github.io/Portfolio/)**")
+

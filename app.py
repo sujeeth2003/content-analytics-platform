@@ -337,3 +337,23 @@ with tab1:
     fig.update_yaxes(gridcolor="#333", zeroline=False)
     st.plotly_chart(fig, use_container_width=True)
 
+    st.markdown("### Cohort Retention Analysis")
+    cohort_summary = user_df.groupby("cohort").agg(
+        users=("user_id", "count"),
+        retention_rate=("is_retained", "mean"),
+        avg_completion=("avg_completion", "mean"),
+        avg_active_days=("active_days", "mean")
+    ).reset_index()
+
+    fig2 = px.bar(cohort_summary, x="cohort", y="retention_rate",
+                  color="retention_rate", color_continuous_scale=["#e50914","#f5c518","#46d369"],
+                  labels={"retention_rate": "Retention Rate", "cohort": "User Cohort"},
+                  text=cohort_summary["retention_rate"].apply(lambda x: f"{x:.0%}"))
+    fig2.update_layout(height=300, paper_bgcolor="#141414", plot_bgcolor="#1a1a1a",
+                       font=dict(color="#e5e5e5"), coloraxis_showscale=False,
+                       margin=dict(l=0, r=0, t=10, b=0))
+    fig2.update_traces(textposition="outside")
+    fig2.update_xaxes(gridcolor="#333")
+    fig2.update_yaxes(gridcolor="#333", tickformat=".0%")
+    st.plotly_chart(fig2, use_container_width=True)
+

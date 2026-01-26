@@ -357,3 +357,21 @@ with tab1:
     fig2.update_yaxes(gridcolor="#333", tickformat=".0%")
     st.plotly_chart(fig2, use_container_width=True)
 
+# ─────────────────────────── TAB 2: Segments ─────────────────────────────────
+with tab2:
+    st.markdown("### Audience Segmentation (K-Means, K=4)")
+    st.caption("Users clustered by behavioral signals: completion rate, active days, titles watched, engagement depth")
+
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        seg_counts = user_df["segment"].value_counts().reset_index()
+        seg_counts.columns = ["segment", "count"]
+        colors = {"Power Viewers": "#e50914", "Engaged Critics": "#f5c518",
+                  "Casual Browsers": "#46d369", "At-Risk": "#888"}
+        fig3 = px.pie(seg_counts, names="segment", values="count",
+                      color="segment", color_discrete_map=colors,
+                      hole=0.5)
+        fig3.update_layout(height=320, paper_bgcolor="#141414",
+                           font=dict(color="#e5e5e5"), margin=dict(l=0,r=0,t=10,b=0))
+        st.plotly_chart(fig3, use_container_width=True)
+

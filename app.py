@@ -375,3 +375,22 @@ with tab2:
                            font=dict(color="#e5e5e5"), margin=dict(l=0,r=0,t=10,b=0))
         st.plotly_chart(fig3, use_container_width=True)
 
+    with col2:
+        seg_profile = user_df.groupby("segment").agg(
+            avg_completion=("avg_completion","mean"),
+            avg_active_days=("active_days","mean"),
+            avg_titles=("titles_watched","mean"),
+            retention_score=("retention_score","mean"),
+        ).reset_index()
+        fig4 = px.bar(seg_profile.melt(id_vars="segment"),
+                      x="variable", y="value", color="segment",
+                      barmode="group",
+                      color_discrete_map=colors,
+                      labels={"variable":"Metric","value":"Score","segment":"Segment"})
+        fig4.update_layout(height=320, paper_bgcolor="#141414", plot_bgcolor="#1a1a1a",
+                           font=dict(color="#e5e5e5"), margin=dict(l=0,r=0,t=10,b=0))
+        fig4.update_xaxes(gridcolor="#333", tickvals=["avg_completion","avg_active_days","avg_titles","retention_score"],
+                          ticktext=["Completion","Active Days","Titles","Retention"])
+        fig4.update_yaxes(gridcolor="#333")
+        st.plotly_chart(fig4, use_container_width=True)
+

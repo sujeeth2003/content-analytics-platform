@@ -531,3 +531,27 @@ scalable self-service analytics infrastructure.
         """,
     }
 
+    selected = st.selectbox("Select a query to run:", list(queries.keys()))
+    st.code(queries[selected].strip(), language="sql")
+
+    if st.button("▶ Execute Query"):
+        result = pd.read_sql(queries[selected], conn)
+        st.dataframe(result, use_container_width=True, hide_index=True)
+        st.caption(f"{len(result)} rows returned")
+
+    st.markdown("#### View Definitions")
+    st.code("""
+-- user_metrics: per-user behavioral summary (reusable across all downstream analysis)
+CREATE VIEW user_metrics AS
+SELECT
+    e.user_id,
+    COUNT(DISTINCT e.content_id)                          AS titles_watched,
+    AVG(e.watch_pct)                                      AS avg_completion,
+    SUM(CASE WHEN e.watch_pct >= 0.85 THEN 1 ELSE 0 END) AS completed_titles,
+    SUM(CASE WHEN e.watch_pct < 0.25  THEN 1 ELSE 0 END) AS dropped_titles,
+    AVG(e.rating)                                         AS avg_rating,
+    COUNT(DISTINCT DATE(e.event_date))                    AS active_days,
+    MAX(e.event_date)                                     AS last_seen
+FROM events e
+GROUP BY e.user_id;
+
